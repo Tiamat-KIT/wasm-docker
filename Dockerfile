@@ -4,9 +4,10 @@ RUN apt-get update && apt-get install -y \
     curl \
     gcc \
     libssl-dev \
+    wget \
     && apt-get clean && rm -rf /var/lin/apt/lists/*
 
-RUN apt install pkg-config -y
+RUN apt install -y pkg-config 
 
 
 # Rust Install 
@@ -41,7 +42,8 @@ RUN rustup set profile minimal && \
     rustup target add wasm32-unknown-unknown --toolchain nightly
 RUN rustup set profile default && rustup default stable
 RUN cargo install wasm-bindgen-cli 
-RUN cargo install --locked trunk
+RUN wget -qO- https://github.com/trunk-rs/trunk/releases/download/0.17.10/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf-
+RUN mv trunk /usr/local/bin
 RUN touch index.html
 RUN cargo add leptos
 # RUN trunk serve --open --watch . --port 8080
