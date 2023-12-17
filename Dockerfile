@@ -30,8 +30,9 @@ ENV TZ Asia/Tokyo
 # Set the default Rust toolchain
 RUN rustup default stable
 
+WORKDIR /root/woekspace/wasm-docker
 RUN cargo init develop
-WORKDIR /develop
+WORKDIR /root/woekspace/wasm-docker/develop
 RUN rustup update 
 RUN rustup set profile minimal && \
     rustup default nightly && \
