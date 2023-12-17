@@ -9,31 +9,27 @@ RUN apt-get update && apt-get install -y \
 
 RUN apt install -y pkg-config 
 
+# Install Rust using rustup
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
-# Rust Install 
-ENV RUST_HOME /usr/local/lib/rust
-ENV RUSTUP_HOME ${RUST_HOME}/rustup
-ENV CARGO_HOME ${RUST_HOME}/cargo 
-ENV CARGO_TARGET_DIR /tmp/target
-ENV RUST_BACKTRACE 1
+# Set environment variables for Rust
+ENV PATH="/root/.cargo/bin:${PATH}"
+ENV RUST_HOME="/usr/local/rust"
+ENV RUSTUP_HOME="/usr/local/rustup"
+ENV CARGO_HOME="/usr/local/cargo"
+ENV CARGO_TARGET_DIR="/usr/local/cargo-target"
 
-ENV USER_NAME tiamat
+ENV RUST_BACKTRACE=1
+
+# ENV USER_NAME tiamat
 ENV TZ Asia/Tokyo
 
-
-RUN mkdir /usr/local/lib/rust && \
-    chmod u+x ${RUST_HOME}
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > ${RUST_HOME}/rustup.sh \
-    && chmod u+x ${RUST_HOME}/rustup.sh \
-    && ${RUST_HOME}/rustup.sh -y --default-toolchain nightly --no-modify-path
-ENV PATH $PATH:$CARGO_HOME/bin
-
 RUN cargo init develop
-RUN adduser ${USER_NAME} && \
-    chown -R ${USER_NAME} /develop && \
-    chown -R ${USER_NAME} ${CARGO_HOME} && \
-    chown -R ${USER_NAME} ${RUST_HOME}
-USER ${USER_NAME}
+# RUN adduser ${USER_NAME} 
+# RUN chown -R ${USER_NAME} /develop 
+# RUN chown -R ${USER_NAME} ${CARGO_HOME}
+# RUN chown -R ${USER_NAME} ${RUST_HOME}
+# USER ${USER_NAME}
 
 WORKDIR /develop
 RUN rustup update 

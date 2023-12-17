@@ -3,7 +3,9 @@ volumes:
   kit-rust-ar:
 services:
   kit-rust-ar:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - .:/develop
     tty: true
