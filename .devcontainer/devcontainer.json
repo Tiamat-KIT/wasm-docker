@@ -1,0 +1,20 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-dockerfile
+{
+	"name": "wasm-ar",
+	"build": {
+		// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
+		"dockerfile": "../Dockerfile"
+	},
+	"remoteUser": "tiamat",
+	"workspaceFolder": "/develop",
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/lee-orr/rusty-dev-containers/cargo-web:0": "0.1.0",
+		"ghcr.io/trunk-io/devcontainer-feature/trunk:1": "1.1.0",
+		"ghcr.io/lee-orr/rusty-dev-containers/wasm32-unknown-unknown:0": "0.1.0",
+		"ghcr.io/lee-orr/rusty-dev-containers/wasm-bindgen-cli:0": "0.1.0",
+		"ghcr.io/devcontainers-contrib/features/curl-apt-get:1": "1.0.16"
+	}
+}

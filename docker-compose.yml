@@ -1,0 +1,10 @@
+version: '1.0'
+volumes: 
+  kit-rust-ar:
+services:
+  kit-rust-ar:
+    build: .
+    volumes:
+      - .:/develop
+    tty: true
+  
