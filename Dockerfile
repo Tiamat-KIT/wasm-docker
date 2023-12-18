@@ -1,46 +1,42 @@
-FROM  ubuntu:latest
+# ベースイメージの指定
+FROM ubuntu:latest
 
-RUN apt-get update && apt-get install -y \
-    curl \
-    gcc \
-    libssl-dev \
-    wget \
-    && apt-get clean && rm -rf /var/lin/apt/lists/*
+# apt-getのupdateと必要なパッケージのインストール
+RUN apt-get update && \
+    apt-get install -y curl gcc libssl-dev wget pkg-config && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt install -y pkg-config 
+# pkg-configのインストール
+RUN apt-get update && \
+    apt-get install -y pkg-config && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install Rust using rustup
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh \
-    && sh rustup.sh -y --default-toolchain stable --profile default \
-    && rm rustup.sh
-
-# Set environment variables for Rust
+# Rustのインストール
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
-ENV RUST_HOME="/root"
 ENV RUSTUP_HOME="/root/.rustup"
 ENV CARGO_HOME="/root/.cargo"
-ENV CARGO_TARGET_DIR="/root/.cargo/target"
+ENV RUST_HOME="/root/.rustup"
+ENV CARGO_TARGET_DIR="/root/develop/target"
 
-# Set the default Rust toolchain
-RUN rustup default stable
-ENV RUST_BACKTRACE=1
+# 開発用のディレクトリ作成とcargo initの実行
+RUN mkdir -p /root/develop && \
+    cd /root/develop && \
+    cargo init --name develop
 
-# ENV USER_NAME tiamat
-ENV TZ Asia/Tokyo
-# Set the default Rust toolchain
-RUN rustup default stable
+# コンテナの起動時のディレクトリ指定
+WORKDIR /root/develop/develop
 
-# Install wasm-pack
-RUN mkdir workspace
-WORKDIR /workspace
-RUN cargo init develop
-RUN rustup update 
-RUN rustup set profile minimal && \
+# 追加のコマンド実行
+RUN rustup update && \
+    rustup set profile minimal && \
     rustup default nightly && \
-    rustup target add wasm32-unknown-unknown --toolchain nightly
-RUN rustup set profile default && rustup default stable
-RUN cargo install wasm-bindgen-cli 
-RUN cargo install --locked trunk
-RUN touch index.html
-RUN cargo add leptos
-# RUN trunk serve --open --watch . --port 8080
+    rustup target add wasm32-unknown-unknown --toolchain nightly && \
+    rustup set profile default && \
+    rustup default stable && \
+    cargo install wasm-bindgen-cli && \
+    cargo install --locked trunk && \
+    touch index.html && \
+    cargo add leptos
